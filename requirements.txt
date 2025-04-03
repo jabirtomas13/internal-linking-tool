@@ -1,7 +1,5 @@
 streamlit
 pandas
 requests
-bs4
-random
-time
-matplotlib.pyplot 
+beautifulsoup4
+matplotlib
