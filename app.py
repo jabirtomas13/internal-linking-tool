@@ -47,7 +47,7 @@ def content_extraction(urls_list, keywords):
     user_agents = [
         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
         'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Safari/605.1.15',
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) rv:89.0 Gecko/20100101 Firefox/89.0'
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0'
     ]
     for url in urls_list:
         try:
@@ -85,16 +85,24 @@ def content_extraction(urls_list, keywords):
 # Streamlit app starts here
 st.title("Internal Linking Analysis Tool")
 
-# Upload CSV file with keywords
-uploaded_file = st.file_uploader("Upload a CSV file with keywords", type="csv")
-if uploaded_file is not None:
-    keywords_df = pd.read_csv(uploaded_file)
-    if "keyword" not in keywords_df.columns:
-        st.error("The uploaded CSV must have a column named 'keyword'.")
-        st.stop()
-    keywords_list = keywords_df["keyword"].tolist()
+# Input keywords
+keywords_input = st.text_area(
+    "Enter keywords (comma-separated or one per line):",
+    height=150
+)
+
+if not keywords_input.strip():
+    st.info("Please enter at least one keyword.")
+    st.stop()
+
+# Process keywords input
+if "," in keywords_input:
+    keywords_list = [kw.strip() for kw in keywords_input.split(",") if kw.strip()]
 else:
-    st.info("Please upload a CSV file with a column named 'keyword'.")
+    keywords_list = [kw.strip() for kw in keywords_input.splitlines() if kw.strip()]
+
+if not keywords_list:
+    st.error("No valid keywords provided.")
     st.stop()
 
 # Input sitemap URL
