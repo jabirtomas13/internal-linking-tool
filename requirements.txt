@@ -1,0 +1,7 @@
+streamlit
+pandas
+requests
+bs4
+random
+time
+matplotlib.pyplot 
